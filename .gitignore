@@ -1,4 +1,6 @@
 .idea
 conf
+tmp
+
 
 .DS_Store
