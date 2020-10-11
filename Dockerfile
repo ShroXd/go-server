@@ -4,6 +4,7 @@ RUN mkdir /code
 ADD . /code/
 WORKDIR /code
 
+RUN GOPROXY="https://goproxy.io/"
 RUN go mod download
 RUN go build -o main ./
 
