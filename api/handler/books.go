@@ -19,14 +19,14 @@ func GetBooks(c *gin.Context) {
 	if err := collection.Find(ctx, bson.M{}).Limit(10).All(&books); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": 500,
-			"msg": err.Error(),
+			"msg":    err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": 200,
-		"msg": "Success",
-		"data": books,
+		"msg":    "Success",
+		"data":   books,
 	})
 }
