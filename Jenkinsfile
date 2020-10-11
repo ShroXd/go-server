@@ -1,6 +1,6 @@
 node {
     stage('Git Pull') {
-        git 'git@github.com:ShroXd/go-server.git'
+        git 'https://github.com/ShroXd/go-server.git'
     }
 
     stage('Build Image') {
