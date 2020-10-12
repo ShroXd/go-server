@@ -4,26 +4,20 @@ import (
 	"context"
 	"github.com/qiniu/qmgo"
 	"log"
+
+	"go-server/setting"
 )
 
 var (
-	Client *qmgo.Client
-	Mongo  *qmgo.Database
-)
-
-const (
-	MongoDBUrl = "mongodb://49.232.5.176:34541"
+	Client     *qmgo.Client
+	Mongo      *qmgo.Database
+	MongoDBUrl = setting.LoadMongoDB()
 )
 
 func Connect() {
 	ctx := context.Background()
-	client, err := qmgo.NewClient(ctx, &qmgo.Config{Uri: MongoDBUrl, Database: "dev", Coll: "books"})
-
-	//defer func() {
-	//	if err = client.Close(ctx); err != nil {
-	//		panic(err)
-	//	}
-	//}()
+	config := &qmgo.Config{Uri: MongoDBUrl, Database: "dev", Coll: "books"}
+	client, err := qmgo.NewClient(ctx, config)
 
 	if err != nil {
 		log.Fatal(err)

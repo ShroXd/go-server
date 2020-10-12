@@ -10,11 +10,16 @@ import (
 )
 
 func GetBooks(c *gin.Context) {
-	mongo := db.Mongo
+	db.Connect()
+	defer func() {
+		if err := db.Client.Close(context.Background()); err != nil {
+			panic(err)
+		}
+	}()
+	collection := db.Mongo.Collection("books")
 
 	ctx := context.Background()
 	var books []models.Books
-	collection := mongo.Collection("books")
 
 	if err := collection.Find(ctx, bson.M{}).Limit(10).All(&books); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
