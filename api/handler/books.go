@@ -7,6 +7,7 @@ import (
 	"go-server/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
+	"strconv"
 )
 
 func GetBooks(c *gin.Context) {
@@ -19,9 +20,18 @@ func GetBooks(c *gin.Context) {
 	collection := db.Mongo.Collection("books")
 
 	ctx := context.Background()
-	var books []models.Books
+	var (
+		books    []models.Books
+		page, _  = strconv.ParseInt(c.Query("list_page"), 10, 64)
+		limit, _ = strconv.ParseInt(c.Query("list_limit"), 10, 64)
+		bookName = c.DefaultQuery("book_name", "")
+	)
 
-	if err := collection.Find(ctx, bson.M{}).Limit(10).All(&books); err != nil {
+	if err := collection.Find(ctx, bson.M{
+		"bookName": bson.M{
+			"$regex": bookName,
+		},
+	}).Skip((page - 1) * limit).Limit(limit).All(&books); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": 500,
 			"msg":    err.Error(),
@@ -32,6 +42,9 @@ func GetBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": 200,
 		"msg":    "Success",
-		"data":   books,
+		"data": gin.H{
+			"total": len(books),
+			"books": books,
+		},
 	})
 }

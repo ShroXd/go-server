@@ -10,5 +10,5 @@ func main() {
 	r := gin.Default()
 	api.RunApiHandlers(r)
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":4040") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
